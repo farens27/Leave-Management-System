@@ -427,6 +427,36 @@ This project is deployed on **Vercel** with automatic deployments on every push 
 
 ---
 
+## 💬 AI Development Chat History
+
+This project was built through an AI pair programming session with **Antigravity (Google DeepMind)**. The full development conversation is documented in [`CHAT_HISTORY.md`](CHAT_HISTORY.md).
+
+### Session Summary
+
+| Metric | Value |
+|--------|-------|
+| Total Requests | 15 |
+| Features Implemented | 25+ |
+| New Files Created | 15+ |
+| Git Commits | 8 |
+| Versions Released | v1.0 → v1.5 → v2.0 → v2.1 |
+| Security Score Progress | 62 → 85 (+37%) |
+
+### Key Sessions
+
+| # | Request | Outcome |
+|---|---------|---------|
+| 1 | Dark mode on code review | Added ThemeToggle to public page |
+| 3 | Help chat bot | Floating Q&A widget with guided templates |
+| 6 | Indonesia holidays + 8 features | 9 features built in parallel (v1.5) |
+| 8 | More useful features | 6 features: leave types, profile, bulk actions (v2.0) |
+| 10 | Fix code review scores + history | Historical tracking, FIXED status, score timeline |
+| 13 | UI rework + all suggestions | Command palette, skeletons, analytics, overlap detection (v2.1) |
+
+> 📖 **[Read the full chat history →](CHAT_HISTORY.md)**
+
+---
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -444,5 +474,6 @@ This project is open source and available under the [MIT License](LICENSE).
 ---
 
 <p align="center">
-  Built with 💚 using Next.js, Supabase & Tailwind CSS
+  Built with 💚 using Next.js, Supabase & Tailwind CSS<br/>
+  AI-assisted development by Antigravity (Google DeepMind)
 </p>
