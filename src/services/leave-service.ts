@@ -1,5 +1,19 @@
 import { supabase } from "@/lib/supabase";
 import { LeaveRequest, LeaveRequestFormData, LeaveStatus, LeaveStatusCounts } from "@/types";
+import { EmployeeService } from "@/services/employee-service";
+import { NotificationService } from "@/services/notification-service";
+
+function countBusinessDays(start: string, end: string): number {
+  let count = 0;
+  const current = new Date(start);
+  const endDate = new Date(end);
+  while (current <= endDate) {
+    const day = current.getDay();
+    if (day !== 0 && day !== 6) count++;
+    current.setDate(current.getDate() + 1);
+  }
+  return count;
+}
 
 export const LeaveService = {
   async getAll(): Promise<LeaveRequest[]> {
@@ -34,6 +48,18 @@ export const LeaveService = {
       .select()
       .single();
     if (error) throw error;
+
+    // Notify admin about new leave request
+    try {
+      const emp = await EmployeeService.getById(formData.employeeId);
+      if (emp) {
+        await NotificationService.notifyAdmin(
+          "New Leave Request",
+          `${emp.name} submitted a leave request (${formData.startDate} to ${formData.endDate})`
+        );
+      }
+    } catch { /* non-critical */ }
+
     return mapRow(data);
   },
 
@@ -45,7 +71,38 @@ export const LeaveService = {
       .select()
       .single();
     if (error) return null;
-    return mapRow(data);
+
+    const leave = mapRow(data);
+
+    // Handle leave balance and notifications
+    try {
+      const emp = await EmployeeService.getById(leave.employeeId);
+      if (emp) {
+        const days = countBusinessDays(leave.startDate, leave.endDate);
+
+        if (status === "APPROVED") {
+          // Deduct leave balance
+          const newBalance = Math.max(0, emp.leaveBalance - days);
+          await EmployeeService.updateLeaveBalance(emp.id, newBalance);
+
+          await NotificationService.create({
+            userId: emp.username,
+            title: "Leave Approved ✅",
+            message: `Your leave request (${leave.startDate} to ${leave.endDate}) has been approved. ${days} day(s) deducted. Remaining balance: ${newBalance} days.`,
+            type: "success",
+          });
+        } else if (status === "REJECTED") {
+          await NotificationService.create({
+            userId: emp.username,
+            title: "Leave Rejected ❌",
+            message: `Your leave request (${leave.startDate} to ${leave.endDate}) has been rejected.`,
+            type: "error",
+          });
+        }
+      }
+    } catch { /* non-critical */ }
+
+    return leave;
   },
 
   async getByEmployeeId(employeeId: string): Promise<LeaveRequest[]> {
@@ -69,6 +126,18 @@ export const LeaveService = {
       approved: rows.filter((r) => r.status === "APPROVED").length,
       rejected: rows.filter((r) => r.status === "REJECTED").length,
     };
+  },
+
+  async getAllWithEmployeeNames(): Promise<(LeaveRequest & { employeeName: string })[]> {
+    const [leaves, employees] = await Promise.all([
+      this.getAll(),
+      EmployeeService.getAll(),
+    ]);
+    const empMap = new Map(employees.map((e) => [e.id, e.name]));
+    return leaves.map((l) => ({
+      ...l,
+      employeeName: empMap.get(l.employeeId) ?? "Unknown",
+    }));
   },
 };
 

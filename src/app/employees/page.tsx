@@ -9,8 +9,9 @@ import { EmployeeTable } from "@/components/employee/EmployeeTable";
 import { EmployeeService } from "@/services/employee-service";
 import { AuthService } from "@/services/auth-service";
 import { Employee } from "@/types";
-import { UserPlus, Search, Loader2 } from "lucide-react";
+import { UserPlus, Search, Loader2, Download } from "lucide-react";
 import { toast } from "sonner";
+import { exportToCSV } from "@/utils/export";
 
 export default function EmployeesPage() {
   const router = useRouter();
@@ -67,13 +68,34 @@ export default function EmployeesPage() {
         title="Employees"
         description="Manage your employee records"
         action={
-          <Button
-            onClick={() => router.push("/employees/new")}
-            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/25"
-          >
-            <UserPlus className="mr-2 h-4 w-4" />
-            Add Employee
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const csvData = employees.map((e) => ({
+                  Name: e.name,
+                  Department: e.department,
+                  Position: e.position,
+                  Username: e.username,
+                  "Leave Balance": e.leaveBalance,
+                }));
+                exportToCSV(csvData, `employees-${new Date().toISOString().split("T")[0]}.csv`);
+                toast.success("Exported to CSV");
+              }}
+              className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+            >
+              <Download className="mr-1.5 h-3.5 w-3.5" />
+              Export
+            </Button>
+            <Button
+              onClick={() => router.push("/employees/new")}
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/25"
+            >
+              <UserPlus className="mr-2 h-4 w-4" />
+              Add Employee
+            </Button>
+          </div>
         }
       />
 

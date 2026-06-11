@@ -16,7 +16,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { leaveRequestSchema, LeaveRequestSchemaType } from "@/validators/leave";
 import { Employee, LeaveRequestFormData, AuthSession } from "@/types";
-import { CalendarPlus, User } from "lucide-react";
+import { CalendarPlus, User, AlertTriangle, PartyPopper } from "lucide-react";
+import { getHolidaysInRange } from "@/data/indonesia-holidays";
 
 type LeaveRequestFormProps = {
   employees: Employee[];
@@ -34,6 +35,7 @@ export function LeaveRequestForm({ employees, session, onSubmit }: LeaveRequestF
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<LeaveRequestSchemaType>({
     resolver: zodResolver(leaveRequestSchema),
@@ -48,6 +50,10 @@ export function LeaveRequestForm({ employees, session, onSubmit }: LeaveRequestF
   const handleFormSubmit = (data: LeaveRequestSchemaType) => {
     onSubmit(data);
   };
+
+  const watchStart = watch("startDate");
+  const watchEnd = watch("endDate");
+  const holidaysInRange = watchStart && watchEnd ? getHolidaysInRange(watchStart, watchEnd) : [];
 
   return (
     <Card className="border-0 shadow-xl bg-gradient-to-br from-white to-emerald-50/30 dark:from-gray-900 dark:to-emerald-950/20">
@@ -123,6 +129,29 @@ export function LeaveRequestForm({ employees, session, onSubmit }: LeaveRequestF
               )}
             </div>
           </div>
+
+          {/* Holiday Warning */}
+          {holidaysInRange.length > 0 && (
+            <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/20 p-3">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+                    Your leave includes {holidaysInRange.length} public holiday{holidaysInRange.length > 1 ? "s" : ""}:
+                  </p>
+                  <ul className="mt-1 space-y-0.5">
+                    {holidaysInRange.map((h) => (
+                      <li key={h.date} className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400">
+                        <PartyPopper className="h-3 w-3" />
+                        <span className="font-mono">{h.date}</span> — {h.name}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-[11px] text-amber-500 mt-1">Consider adjusting your dates to save leave days.</p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="reason">Reason</Label>

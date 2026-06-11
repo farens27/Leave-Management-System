@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AuthService } from "@/services/auth-service";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import { NotificationBell } from "@/components/shared/NotificationBell";
+import { Avatar } from "@/components/shared/Avatar";
+import { useSessionExpiry } from "@/hooks/useSessionExpiry";
 import { AuthSession } from "@/types";
 
 const adminNavItems = [
@@ -27,6 +30,8 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [session, setSession] = useState<AuthSession | null>(null);
   const [scrolled, setScrolled] = useState(false);
+
+  useSessionExpiry(30);
 
   useEffect(() => {
     setSession(AuthService.getSession());
@@ -91,6 +96,7 @@ export function Navbar() {
             {/* User info */}
             <div className="ml-2 flex items-center gap-2">
               <div className="flex items-center gap-1.5 rounded-lg bg-gray-100 dark:bg-white/5 px-2.5 py-1.5">
+                <Avatar name={session?.username ?? ""} size="sm" />
                 {isAdmin ? (
                   <Shield className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
                 ) : (
@@ -107,6 +113,8 @@ export function Navbar() {
               </div>
             </div>
 
+            <NotificationBell />
+
             <ThemeToggle />
 
             <Button
@@ -122,6 +130,7 @@ export function Navbar() {
 
           {/* Mobile Toggle */}
           <div className="flex items-center gap-1 md:hidden">
+            <NotificationBell />
             <ThemeToggle />
             <Button
               variant="ghost"

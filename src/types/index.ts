@@ -7,6 +7,7 @@ export type Employee = {
   position: string;
   username: string;
   password: string;
+  leaveBalance: number;
 };
 
 export type LeaveRequest = {

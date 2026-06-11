@@ -19,10 +19,12 @@ import {
   Leaf,
   TrendingUp,
   Loader2,
+  PartyPopper,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { allHolidays } from "@/data/indonesia-holidays";
 
 function getGreeting(): string {
   const hour = new Date().getHours();
@@ -262,6 +264,44 @@ export default function DashboardPage() {
               })}
             </div>
           )}
+        </div>
+      </div>
+
+      {/* ═══ Upcoming Holidays ═══ */}
+      <div className="rounded-2xl border border-red-100/60 dark:border-red-900/20 bg-white dark:bg-gray-900/80 p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 dark:bg-red-950/50">
+              <PartyPopper className="h-4 w-4 text-red-500" />
+            </div>
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white">Upcoming Holidays (Indonesia)</h3>
+          </div>
+          <Link href="/leave">
+            <Button variant="ghost" size="sm" className="text-xs text-gray-400 hover:text-gray-600">
+              View Calendar <ArrowRight className="ml-1 h-3 w-3" />
+            </Button>
+          </Link>
+        </div>
+        <div className="space-y-2">
+          {allHolidays
+            .filter((h) => h.date >= new Date().toISOString().split("T")[0])
+            .slice(0, 5)
+            .map((h) => (
+              <div key={h.date} className="flex items-center gap-3 rounded-lg bg-red-50/50 dark:bg-red-950/10 border border-red-100/50 dark:border-red-900/20 px-3 py-2">
+                <div className="flex h-9 w-9 flex-shrink-0 flex-col items-center justify-center rounded-lg bg-red-500 text-white">
+                  <span className="text-[9px] font-bold uppercase leading-none">
+                    {new Date(h.date + "T00:00:00").toLocaleDateString("en-US", { month: "short" })}
+                  </span>
+                  <span className="text-sm font-extrabold leading-none">
+                    {new Date(h.date + "T00:00:00").getDate()}
+                  </span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[13px] font-semibold text-gray-800 dark:text-gray-200 truncate">{h.name}</p>
+                  <p className="text-[11px] text-gray-400 truncate">{h.nameBahasa}</p>
+                </div>
+              </div>
+            ))}
         </div>
       </div>
 

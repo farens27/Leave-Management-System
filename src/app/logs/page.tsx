@@ -6,7 +6,7 @@ import { AuthService } from "@/services/auth-service";
 import { ActivityLogService, ActivityLogEntry } from "@/services/activity-log-service";
 import {
   Activity, ShieldAlert, LogIn, LogOut, UserPlus, UserMinus, Pencil,
-  CalendarPlus, CheckCircle2, XCircle, AlertTriangle, Loader2, Filter, Leaf
+  CalendarPlus, CheckCircle2, XCircle, AlertTriangle, Loader2, Filter, Leaf, Download
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   Legend, PieChart, Pie, Cell,
 } from "recharts";
+import { exportToCSV } from "@/utils/export";
+import { toast } from "sonner";
 
 const eventConfig: Record<string, { label: string; color: string; bg: string; icon: React.ElementType }> = {
   LOGIN_SUCCESS: { label: "Login Success", color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30", icon: LogIn },
@@ -81,6 +83,27 @@ export default function LogMonitoringPage() {
       <PageHeader
         title="Log Monitoring"
         description="Track all user activity, login attempts, and system events"
+        action={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const csvData = logs.map((l) => ({
+                Time: new Date(l.createdAt).toLocaleString(),
+                Event: l.eventType,
+                Username: l.username,
+                Role: l.role,
+                Details: l.details,
+              }));
+              exportToCSV(csvData, `activity-logs-${new Date().toISOString().split("T")[0]}.csv`);
+              toast.success("Exported to CSV");
+            }}
+            className="border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300"
+          >
+            <Download className="mr-1.5 h-3.5 w-3.5" />
+            Export Logs
+          </Button>
+        }
       />
 
       {/* ═══ Stats Cards ═══ */}

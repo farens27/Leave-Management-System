@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Employee } from "@/types";
-import { Edit, Trash2, Users, User } from "lucide-react";
+import { Edit, Trash2, Users } from "lucide-react";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
+import { Avatar } from "@/components/shared/Avatar";
 
 type EmployeeTableProps = {
   employees: Employee[];
@@ -39,6 +40,7 @@ export function EmployeeTable({ employees, onEdit, onDelete }: EmployeeTableProp
             <TableHead className="font-semibold text-emerald-900 dark:text-emerald-100">Username</TableHead>
             <TableHead className="font-semibold text-emerald-900 dark:text-emerald-100">Department</TableHead>
             <TableHead className="font-semibold text-emerald-900 dark:text-emerald-100">Position</TableHead>
+            <TableHead className="font-semibold text-emerald-900 dark:text-emerald-100 text-center">Leave Balance</TableHead>
             <TableHead className="text-right font-semibold text-emerald-900 dark:text-emerald-100">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -47,15 +49,24 @@ export function EmployeeTable({ employees, onEdit, onDelete }: EmployeeTableProp
             <TableRow key={employee.id} className="hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 transition-colors">
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900 dark:to-teal-900">
-                    <User className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                  </div>
+                  <Avatar name={employee.name} size="sm" />
                   {employee.name}
                 </div>
               </TableCell>
               <TableCell className="text-muted-foreground font-mono text-sm">{employee.username}</TableCell>
               <TableCell>{employee.department}</TableCell>
               <TableCell>{employee.position}</TableCell>
+              <TableCell className="text-center">
+                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                  employee.leaveBalance > 5
+                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                    : employee.leaveBalance > 0
+                    ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                    : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                }`}>
+                  {employee.leaveBalance} days
+                </span>
+              </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-2">
                   <Button

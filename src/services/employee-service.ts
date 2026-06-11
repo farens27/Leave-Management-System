@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { Employee, EmployeeFormData } from "@/types";
+import { hashPassword, verifyPassword, isHashed } from "@/utils/hash";
 
 export const EmployeeService = {
   async getAll(): Promise<Employee[]> {
@@ -22,6 +23,7 @@ export const EmployeeService = {
   },
 
   async create(formData: EmployeeFormData): Promise<Employee> {
+    const hashedPwd = await hashPassword(formData.password);
     const { data, error } = await supabase
       .from("employees")
       .insert({
@@ -29,7 +31,8 @@ export const EmployeeService = {
         department: formData.department,
         position: formData.position,
         username: formData.username,
-        password: formData.password,
+        password: hashedPwd,
+        leave_balance: 12,
       })
       .select()
       .single();
@@ -38,6 +41,7 @@ export const EmployeeService = {
   },
 
   async update(id: string, formData: EmployeeFormData): Promise<Employee | null> {
+    const hashedPwd = isHashed(formData.password) ? formData.password : await hashPassword(formData.password);
     const { data, error } = await supabase
       .from("employees")
       .update({
@@ -45,7 +49,7 @@ export const EmployeeService = {
         department: formData.department,
         position: formData.position,
         username: formData.username,
-        password: formData.password,
+        password: hashedPwd,
       })
       .eq("id", id)
       .select()
@@ -67,9 +71,20 @@ export const EmployeeService = {
       .from("employees")
       .select("*")
       .eq("username", username)
-      .eq("password", password)
       .single();
     if (error || !data) return null;
+
+    // Support both hashed and legacy plaintext passwords
+    if (isHashed(data.password)) {
+      const match = await verifyPassword(password, data.password);
+      if (!match) return null;
+    } else {
+      if (data.password !== password) return null;
+      // Migrate to hashed password on successful login
+      const hashed = await hashPassword(password);
+      await supabase.from("employees").update({ password: hashed }).eq("id", data.id);
+    }
+
     return mapRow(data);
   },
 
@@ -84,6 +99,23 @@ export const EmployeeService = {
     const { data } = await query;
     return (data ?? []).length > 0;
   },
+
+  async getLeaveBalance(id: string): Promise<number> {
+    const { data, error } = await supabase
+      .from("employees")
+      .select("leave_balance")
+      .eq("id", id)
+      .single();
+    if (error || !data) return 0;
+    return data.leave_balance ?? 12;
+  },
+
+  async updateLeaveBalance(id: string, newBalance: number): Promise<void> {
+    await supabase
+      .from("employees")
+      .update({ leave_balance: newBalance })
+      .eq("id", id);
+  },
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,5 +127,6 @@ function mapRow(row: any): Employee {
     position: row.position ?? "",
     username: row.username,
     password: row.password,
+    leaveBalance: row.leave_balance ?? 12,
   };
 }
