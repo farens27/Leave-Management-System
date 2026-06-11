@@ -9,7 +9,7 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?logo=supabase)
 ![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000?logo=vercel)
 ![Security Score](https://img.shields.io/badge/Security_Score-85%2F100-10b981)
-![Version](https://img.shields.io/badge/Version-2.0.0-blue)
+![Version](https://img.shields.io/badge/Version-2.1.0-blue)
 
 ---
 
@@ -34,7 +34,11 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 ### 📊 Admin Dashboard
 - Stats cards (Total Employees, Leave Requests, Approval Rate)
 - Leave distribution bar chart (Recharts)
-- **🇮🇩 Upcoming Indonesia holidays panel** (2025-2026)
+- **📈 Monthly leave trend** — line chart (last 6 months: approved/rejected/pending)
+- **🏢 Department breakdown** — donut chart showing leaves by department
+- **📊 Approval rate gauge** — circular gauge with percentage
+- **🇮🇩 Upcoming Indonesia holidays panel** (2025-2026, 2-column grid)
+- **Skeleton loaders** during data fetch
 - Quick action navigation
 
 ### 👥 Employee Management (CRUD)
@@ -50,6 +54,7 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 - Submit new leave requests
 - **5 Leave types**: Annual 🌴, Sick 🩺, Personal 💼, Maternity 👶, Paternity 👶
 - **Leave balance tracking** — auto-deducts on approval
+- **🔍 Leave overlap detection** — prevents duplicate date range submissions
 - **Holiday warning** — alerts when leave includes public holidays
 - Approve / Reject workflow
 - **Rejection reason required** — admin must explain rejections
@@ -57,6 +62,7 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 - **Department filter** — admin can filter by department
 - **Calendar view** — monthly calendar with leave overlay
 - **CSV export** with leave type and rejection reason
+- **Skeleton loaders** during data fetch
 - Date range validation
 
 ### 🔔 In-App Notifications
@@ -103,10 +109,19 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 - Guided answers for login help, leave management, system usage
 - Clear message functionality
 
+### ⌨️ Command Palette (Ctrl+K)
+- **Quick search** — fuzzy search across all pages and actions
+- **Navigation** — jump to Dashboard, Employees, Leave, Logs, Profile, Code Review
+- **Actions** — create employee, new leave request, toggle dark mode
+- **Keyboard navigation** — arrow keys to select, Enter to execute
+- Glassmorphism dialog with emerald accents
+
 ### 🎨 UI/UX
 - Dark / Light theme toggle
 - Emerald & Teal color scheme
 - Glassmorphism effects
+- **Skeleton loaders** — shimmer loading states for all pages (replaces spinners)
+- **Improved empty states** — icons + descriptive text when no data
 - Smooth animations & micro-interactions
 - Fully responsive (mobile, tablet, desktop)
 
@@ -114,7 +129,17 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 
 ## 🔄 Changelog
 
-### v2.0.0 (Latest)
+### v2.1.0 (Latest)
+- ⌨️ Added **Command Palette** (Ctrl+K) for quick navigation and actions
+- 💀 Added **skeleton loaders** for dashboard, employees, and leave pages
+- 📈 Added **monthly leave trend** line chart on dashboard
+- 🏢 Added **department breakdown** donut chart on dashboard
+- 📊 Added **approval rate gauge** on dashboard
+- 🔍 Added **leave overlap detection** — prevents duplicate date ranges
+- 🎨 Improved **empty states** with icons and descriptive text
+- 🇮🇩 Updated holiday grid to **2-column layout** showing 6 holidays
+
+### v2.0.0
 - ✅ Added **leave types** (Annual, Sick, Personal, Maternity, Paternity)
 - ✅ Added **employee profile page** with leave balance visualization
 - ✅ Added **self-service password change**
@@ -189,6 +214,7 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 | Session Management | 30-min timeout with auto-logout |
 | Activity Logging | Full audit trail in Supabase |
 | Input Validation | Zod schemas on all forms |
+| Leave Overlap Detection | Prevents duplicate date range requests |
 
 ---
 
@@ -331,14 +357,14 @@ src/
 │   └── api/init-db/        # Database initialization API
 ├── components/
 │   ├── ui/                 # shadcn/ui base components (button, input, dialog, etc.)
-│   ├── shared/             # Navbar, ThemeToggle, PageHeader, Avatar, NotificationBell
+│   ├── shared/             # Navbar, ThemeToggle, PageHeader, Avatar, NotificationBell, CommandPalette, Skeleton
 │   ├── employee/           # Employee form & table
 │   ├── dashboard/          # Stats cards & charts
 │   └── leave/              # Leave form, table, calendar
 ├── services/               # Supabase CRUD services
 │   ├── auth-service.ts     # Authentication + activity logging
 │   ├── employee-service.ts # Employee CRUD + leave balance
-│   ├── leave-service.ts    # Leave requests + balance deduction
+│   ├── leave-service.ts    # Leave requests + overlap detection + balance deduction
 │   ├── activity-log-service.ts # Event logging
 │   └── notification-service.ts # In-app notifications
 ├── lib/
