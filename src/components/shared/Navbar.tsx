@@ -11,6 +11,7 @@ import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { NotificationBell } from "@/components/shared/NotificationBell";
 import { Avatar } from "@/components/shared/Avatar";
 import { useSessionExpiry } from "@/hooks/useSessionExpiry";
+import { CommandPalette } from "@/components/shared/CommandPalette";
 import { AuthSession } from "@/types";
 
 const adminNavItems = [
@@ -33,6 +34,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useSessionExpiry(30);
+  // Command Palette is rendered at the end of the component
 
   useEffect(() => {
     setSession(AuthService.getSession());
@@ -53,6 +55,7 @@ export function Navbar() {
   };
 
   return (
+    <>
     <nav 
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled 
@@ -199,5 +202,7 @@ export function Navbar() {
         )}
       </div>
     </nav>
+      <CommandPalette />
+    </>
   );
 }

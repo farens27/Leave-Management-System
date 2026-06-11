@@ -35,7 +35,24 @@ export const LeaveService = {
     return mapRow(data);
   },
 
+  async checkOverlap(employeeId: string, startDate: string, endDate: string): Promise<boolean> {
+    const { data } = await supabase
+      .from("leave_requests")
+      .select("id")
+      .eq("employee_id", employeeId)
+      .neq("status", "REJECTED")
+      .lte("start_date", endDate)
+      .gte("end_date", startDate);
+    return (data?.length ?? 0) > 0;
+  },
+
   async create(formData: LeaveRequestFormData): Promise<LeaveRequest> {
+    // Check for overlapping leave
+    const hasOverlap = await this.checkOverlap(formData.employeeId, formData.startDate, formData.endDate);
+    if (hasOverlap) {
+      throw new Error("OVERLAP: You already have a leave request for this date range.");
+    }
+
     const { data, error } = await supabase
       .from("leave_requests")
       .insert({

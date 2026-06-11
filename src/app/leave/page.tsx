@@ -18,7 +18,8 @@ import { LeaveService } from "@/services/leave-service";
 import { EmployeeService } from "@/services/employee-service";
 import { AuthService } from "@/services/auth-service";
 import { LeaveRequest, Employee, LeaveStatus, AuthSession } from "@/types";
-import { CalendarPlus, Loader2, List, CalendarDays, Download, TreePalm, Building2 } from "lucide-react";
+import { CalendarPlus, List, CalendarDays, Download, TreePalm, Building2 } from "lucide-react";
+import { SkeletonTable } from "@/components/shared/Skeleton";
 import { toast } from "sonner";
 import { exportToCSV } from "@/utils/export";
 
@@ -226,9 +227,7 @@ export default function LeavePage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
-        </div>
+        <SkeletonTable rows={6} />
       ) : viewMode === "list" ? (
         <LeaveRequestTable
           requests={filteredRequests}

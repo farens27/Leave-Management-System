@@ -42,8 +42,15 @@ export default function NewLeaveRequestPage() {
         description: "Your leave request has been submitted for review.",
       });
       router.push("/leave");
-    } catch {
-      toast.error("Failed to submit leave request");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      if (msg.startsWith("OVERLAP:")) {
+        toast.error("Date conflict detected", {
+          description: "You already have a leave request for this date range. Please choose different dates.",
+        });
+      } else {
+        toast.error("Failed to submit leave request");
+      }
     }
   };
 

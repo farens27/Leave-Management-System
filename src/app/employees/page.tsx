@@ -9,7 +9,8 @@ import { EmployeeTable } from "@/components/employee/EmployeeTable";
 import { EmployeeService } from "@/services/employee-service";
 import { AuthService } from "@/services/auth-service";
 import { Employee } from "@/types";
-import { UserPlus, Search, Loader2, Download } from "lucide-react";
+import { UserPlus, Search, Download } from "lucide-react";
+import { SkeletonTable } from "@/components/shared/Skeleton";
 import { toast } from "sonner";
 import { exportToCSV } from "@/utils/export";
 
@@ -110,9 +111,7 @@ export default function EmployeesPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
-        </div>
+        <SkeletonTable rows={6} />
       ) : (
         <EmployeeTable
           employees={filteredEmployees}
