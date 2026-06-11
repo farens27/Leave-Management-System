@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Bot, ChevronRight, ArrowLeft, Leaf } from "lucide-react";
+import { MessageCircle, X, Send, Bot, ChevronRight, ArrowLeft, Leaf, RotateCcw } from "lucide-react";
 
 type Message = {
   id: number;
@@ -264,6 +264,13 @@ export function ChatBot() {
               <h3 className="text-sm font-bold text-white">LeaveManager Assistant</h3>
               <p className="text-[10px] text-emerald-100/60 font-medium">Always here to help</p>
             </div>
+            <button
+              onClick={() => { setMessages([WELCOME_MESSAGE]); setCurrentCategory(null); idCounter.current = 1; }}
+              title="Clear chat"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 transition-colors"
+            >
+              <RotateCcw className="h-3.5 w-3.5 text-white" />
+            </button>
             <div className="flex h-2.5 w-2.5 rounded-full bg-green-300 shadow-sm shadow-green-400/50" />
           </div>
 
