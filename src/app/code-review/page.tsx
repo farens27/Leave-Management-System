@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import Link from "next/link";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -133,11 +134,14 @@ export default function CodeReviewPage() {
               <p className="text-[11px] text-gray-400">LeaveManager • {report.reviewDate}</p>
             </div>
           </div>
-          <Link href="/login">
-            <Button variant="outline" size="sm" className="text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
-              <ArrowLeft className="mr-1.5 h-3.5 w-3.5" /> Back to Login
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link href="/login">
+              <Button variant="outline" size="sm" className="text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700">
+                <ArrowLeft className="mr-1.5 h-3.5 w-3.5" /> Back to Login
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
