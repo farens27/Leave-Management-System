@@ -196,16 +196,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | Password | `admin123` |
 | Access | Full dashboard, employee CRUD, leave management, logs |
 
-### Employee Account
-Create an employee through the admin dashboard, then log in with the employee's credentials:
-
+### Employee Account (Demo)
 | Field | Value |
 |-------|-------|
-| Username | *(set during employee creation)* |
-| Password | *(set during employee creation)* |
+| Username | `john.doe` |
+| Password | `password123` |
 | Access | View & submit leave requests only |
 
-> **Note:** The default password when creating employees is `password123` unless you specify a different one.
+> **Tip:** You can also create more employees through the admin dashboard. The default password is `password123` unless you specify a different one.
 
 ---
 
