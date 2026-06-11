@@ -10,6 +10,8 @@ export type Employee = {
   leaveBalance: number;
 };
 
+export type LeaveType = "ANNUAL" | "SICK" | "PERSONAL" | "MATERNITY" | "PATERNITY";
+
 export type LeaveRequest = {
   id: string;
   employeeId: string;
@@ -17,6 +19,8 @@ export type LeaveRequest = {
   endDate: string;
   reason: string;
   status: LeaveStatus;
+  leaveType: LeaveType;
+  rejectionReason?: string;
 };
 
 export type LeaveStatus = "PENDING" | "APPROVED" | "REJECTED";
@@ -30,7 +34,7 @@ export type AuthSession = {
 
 export type EmployeeFormData = Omit<Employee, "id">;
 
-export type LeaveRequestFormData = Omit<LeaveRequest, "id" | "status">;
+export type LeaveRequestFormData = Omit<LeaveRequest, "id" | "status" | "rejectionReason">;
 
 export type LeaveStatusCounts = {
   pending: number;

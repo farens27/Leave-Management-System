@@ -9,6 +9,9 @@ export const leaveRequestSchema = z
       .string()
       .min(1, "Reason is required")
       .max(500, "Reason must be at most 500 characters"),
+    leaveType: z.enum(["ANNUAL", "SICK", "PERSONAL", "MATERNITY", "PATERNITY"], {
+      required_error: "Leave type is required",
+    }),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
     message: "End date must be on or after start date",

@@ -15,9 +15,17 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { leaveRequestSchema, LeaveRequestSchemaType } from "@/validators/leave";
-import { Employee, LeaveRequestFormData, AuthSession } from "@/types";
-import { CalendarPlus, User, AlertTriangle, PartyPopper } from "lucide-react";
+import { Employee, LeaveRequestFormData, AuthSession, LeaveType } from "@/types";
+import { CalendarPlus, User, AlertTriangle, PartyPopper, TreePalm, Stethoscope, Briefcase, Baby } from "lucide-react";
 import { getHolidaysInRange } from "@/data/indonesia-holidays";
+
+const leaveTypes: { value: LeaveType; label: string; icon: React.ElementType; color: string }[] = [
+  { value: "ANNUAL", label: "Annual Leave", icon: TreePalm, color: "text-emerald-600" },
+  { value: "SICK", label: "Sick Leave", icon: Stethoscope, color: "text-amber-600" },
+  { value: "PERSONAL", label: "Personal Leave", icon: Briefcase, color: "text-blue-600" },
+  { value: "MATERNITY", label: "Maternity Leave", icon: Baby, color: "text-purple-600" },
+  { value: "PATERNITY", label: "Paternity Leave", icon: Baby, color: "text-indigo-600" },
+];
 
 type LeaveRequestFormProps = {
   employees: Employee[];
@@ -44,11 +52,12 @@ export function LeaveRequestForm({ employees, session, onSubmit }: LeaveRequestF
       startDate: "",
       endDate: "",
       reason: "",
+      leaveType: "ANNUAL",
     },
   });
 
   const handleFormSubmit = (data: LeaveRequestSchemaType) => {
-    onSubmit(data);
+    onSubmit(data as LeaveRequestFormData);
   };
 
   const watchStart = watch("startDate");
@@ -67,13 +76,20 @@ export function LeaveRequestForm({ employees, session, onSubmit }: LeaveRequestF
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
           {isEmployee && currentEmployee ? (
             <div className="rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30 p-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500">
-                  <User className="h-5 w-5 text-white" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500">
+                    <User className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-emerald-900 dark:text-emerald-100">Requesting as</p>
+                    <p className="text-base font-semibold text-emerald-700 dark:text-emerald-300">{currentEmployee.name}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-emerald-900 dark:text-emerald-100">Requesting as</p>
-                  <p className="text-base font-semibold text-emerald-700 dark:text-emerald-300">{currentEmployee.name}</p>
+                <div className="flex items-center gap-1.5 rounded-lg bg-white dark:bg-gray-800 border border-emerald-200 dark:border-emerald-700 px-3 py-1.5">
+                  <TreePalm className="h-4 w-4 text-emerald-500" />
+                  <span className="text-sm font-bold text-emerald-700 dark:text-emerald-300">{currentEmployee.leaveBalance}</span>
+                  <span className="text-xs text-emerald-500">days left</span>
                 </div>
               </div>
             </div>
@@ -91,7 +107,7 @@ export function LeaveRequestForm({ employees, session, onSubmit }: LeaveRequestF
                 <SelectContent>
                   {employees.map((emp) => (
                     <SelectItem key={emp.id} value={emp.id}>
-                      {emp.name} — {emp.department}
+                      {emp.name} — {emp.department} ({emp.leaveBalance} days left)
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -101,6 +117,32 @@ export function LeaveRequestForm({ employees, session, onSubmit }: LeaveRequestF
               )}
             </div>
           )}
+
+          {/* Leave Type */}
+          <div className="space-y-2">
+            <Label htmlFor="leaveType">Leave Type</Label>
+            <Select
+              defaultValue="ANNUAL"
+              onValueChange={(value) => setValue("leaveType", value as LeaveType, { shouldValidate: true })}
+            >
+              <SelectTrigger className={errors.leaveType ? "border-red-500" : ""}>
+                <SelectValue placeholder="Select leave type" />
+              </SelectTrigger>
+              <SelectContent>
+                {leaveTypes.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>
+                    <div className="flex items-center gap-2">
+                      <type.icon className={`h-4 w-4 ${type.color}`} />
+                      {type.label}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.leaveType && (
+              <p className="text-sm text-red-500">{errors.leaveType.message}</p>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">

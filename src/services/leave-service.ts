@@ -43,6 +43,7 @@ export const LeaveService = {
         start_date: formData.startDate,
         end_date: formData.endDate,
         reason: formData.reason,
+        leave_type: formData.leaveType ?? "ANNUAL",
         status: "PENDING",
       })
       .select()
@@ -55,7 +56,7 @@ export const LeaveService = {
       if (emp) {
         await NotificationService.notifyAdmin(
           "New Leave Request",
-          `${emp.name} submitted a leave request (${formData.startDate} to ${formData.endDate})`
+          `${emp.name} submitted a ${(formData.leaveType ?? "ANNUAL").toLowerCase()} leave request (${formData.startDate} to ${formData.endDate})`
         );
       }
     } catch { /* non-critical */ }
@@ -63,10 +64,13 @@ export const LeaveService = {
     return mapRow(data);
   },
 
-  async updateStatus(id: string, status: LeaveStatus): Promise<LeaveRequest | null> {
+  async updateStatus(id: string, status: LeaveStatus, rejectionReason?: string): Promise<LeaveRequest | null> {
+    const updateData: Record<string, unknown> = { status };
+    if (rejectionReason) updateData.rejection_reason = rejectionReason;
+
     const { data, error } = await supabase
       .from("leave_requests")
-      .update({ status })
+      .update(updateData)
       .eq("id", id)
       .select()
       .single();
@@ -81,21 +85,21 @@ export const LeaveService = {
         const days = countBusinessDays(leave.startDate, leave.endDate);
 
         if (status === "APPROVED") {
-          // Deduct leave balance
           const newBalance = Math.max(0, emp.leaveBalance - days);
           await EmployeeService.updateLeaveBalance(emp.id, newBalance);
 
           await NotificationService.create({
             userId: emp.username,
             title: "Leave Approved ✅",
-            message: `Your leave request (${leave.startDate} to ${leave.endDate}) has been approved. ${days} day(s) deducted. Remaining balance: ${newBalance} days.`,
+            message: `Your ${leave.leaveType.toLowerCase()} leave (${leave.startDate} to ${leave.endDate}) has been approved. ${days} day(s) deducted. Remaining: ${newBalance} days.`,
             type: "success",
           });
         } else if (status === "REJECTED") {
+          const reasonMsg = rejectionReason ? ` Reason: "${rejectionReason}"` : "";
           await NotificationService.create({
             userId: emp.username,
             title: "Leave Rejected ❌",
-            message: `Your leave request (${leave.startDate} to ${leave.endDate}) has been rejected.`,
+            message: `Your ${leave.leaveType.toLowerCase()} leave (${leave.startDate} to ${leave.endDate}) has been rejected.${reasonMsg}`,
             type: "error",
           });
         }
@@ -103,6 +107,12 @@ export const LeaveService = {
     } catch { /* non-critical */ }
 
     return leave;
+  },
+
+  async bulkUpdateStatus(ids: string[], status: LeaveStatus, rejectionReason?: string): Promise<void> {
+    for (const id of ids) {
+      await this.updateStatus(id, status, rejectionReason);
+    }
   },
 
   async getByEmployeeId(employeeId: string): Promise<LeaveRequest[]> {
@@ -150,5 +160,7 @@ function mapRow(row: any): LeaveRequest {
     endDate: row.end_date,
     reason: row.reason,
     status: row.status,
+    leaveType: row.leave_type ?? "ANNUAL",
+    rejectionReason: row.rejection_reason ?? undefined,
   };
 }

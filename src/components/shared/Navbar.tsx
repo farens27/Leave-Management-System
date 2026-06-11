@@ -22,6 +22,7 @@ const adminNavItems = [
 
 const employeeNavItems = [
   { label: "My Leave", href: "/leave", icon: CalendarDays },
+  { label: "Profile", href: "/profile", icon: User },
 ];
 
 export function Navbar() {
