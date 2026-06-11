@@ -30,7 +30,7 @@ const faqData: FAQCategory[] = [
     questions: [
       {
         q: "I can't login, what should I do?",
-        a: "Please double-check your username and password. The admin account is **admin / admin123**. If you're an employee, use the credentials given by your administrator. Make sure Caps Lock is off and there are no extra spaces.",
+        a: "Please double-check your username and password carefully. Make sure Caps Lock is off and there are no extra spaces. If you're an employee, use the credentials provided by your administrator. If the problem persists, contact your system admin for assistance.",
       },
       {
         q: "I forgot my password",
