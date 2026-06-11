@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/shared/Navbar";
+import { ChatBot } from "@/components/shared/ChatBot";
 import { Toaster } from "sonner";
 import { ReactNode } from "react";
 
@@ -22,6 +23,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
           </main>
         </div>
       )}
+      <ChatBot />
     </>
   );
 }
