@@ -1,6 +1,6 @@
 # 🍃 LeaveManager — Employee Leave Management System
 
-A modern, full-stack employee leave management system built with **Next.js 16**, **React 19**, **Supabase**, and **Tailwind CSS 4**. Features a sleek emerald/teal design with dark/light mode, real-time data, interactive charts, and activity log monitoring.
+A modern, full-stack employee leave management system built with **Next.js 16**, **React 19**, **Supabase**, and **Tailwind CSS 4**. Features a sleek emerald/teal design with dark/light mode, real-time data, interactive charts, Indonesia holiday calendar, and comprehensive security features.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.2-black?logo=next.js)
 ![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react)
@@ -8,6 +8,8 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?logo=supabase)
 ![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000?logo=vercel)
+![Security Score](https://img.shields.io/badge/Security_Score-85%2F100-10b981)
+![Version](https://img.shields.io/badge/Version-2.0.0-blue)
 
 ---
 
@@ -19,8 +21,11 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 
 ## ✨ Features
 
-### 🔐 Authentication
+### 🔐 Authentication & Security
 - Admin & Employee role-based login
+- **SHA-256 password hashing** with salt (Web Crypto API)
+- Auto-migration from plaintext passwords on first login
+- **30-minute session expiry** with 2-minute warning toast
 - Show/Hide password toggle
 - CAPTCHA verification
 - "Remember me" option
@@ -29,33 +34,74 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 ### 📊 Admin Dashboard
 - Stats cards (Total Employees, Leave Requests, Approval Rate)
 - Leave distribution bar chart (Recharts)
+- **🇮🇩 Upcoming Indonesia holidays panel** (2025-2026)
 - Quick action navigation
 
 ### 👥 Employee Management (CRUD)
 - Create, Read, Update, Delete employees
+- **Profile avatars** with initials-based colors
+- **Leave balance column** (12 days/year default)
 - Username uniqueness validation
 - Search & filter capabilities
+- **CSV export** (Excel-compatible with BOM)
 - Responsive data table
 
 ### 📅 Leave Request Management
 - Submit new leave requests
+- **5 Leave types**: Annual 🌴, Sick 🩺, Personal 💼, Maternity 👶, Paternity 👶
+- **Leave balance tracking** — auto-deducts on approval
+- **Holiday warning** — alerts when leave includes public holidays
 - Approve / Reject workflow
-- Status tracking (Pending, Approved, Rejected)
+- **Rejection reason required** — admin must explain rejections
+- **Bulk approve/reject** with checkboxes and floating action bar
+- **Department filter** — admin can filter by department
+- **Calendar view** — monthly calendar with leave overlay
+- **CSV export** with leave type and rejection reason
 - Date range validation
+
+### 🔔 In-App Notifications
+- **Notification bell** with unread badge in navbar
+- Auto-notify employees on leave approve/reject
+- Auto-notify admin on new leave submissions
+- Mark as read / Mark all as read
+- Notification dropdown panel
+
+### 👤 Employee Profile Page
+- View personal info (name, department, position)
+- **Leave balance progress bar** with color-coded status
+- Leave history summary (total, approved, rejected, pending)
+- **Self-service password change** with validation
+- **Team availability view** (admin) — see who's in/out today
+
+### 🇮🇩 Indonesia Holiday Calendar
+- **34 national holidays** (2025-2026) from official government data
+- Holidays shown on dashboard, leave calendar, and leave form
+- Holiday warning when submitting leave during public holidays
+- Color-coded holiday markers on calendar view
 
 ### 📈 Activity Log Monitoring (Admin)
 - Real-time activity feed
 - Daily login activity bar chart
 - Event type distribution pie chart
 - Filter by event type (Login, Logout, Failed, etc.)
+- **CSV export** for audit purposes
 
 ### 📋 Code Review Report (Public)
 - Accessible without login from the login page
-- Security score gauge (circular SVG)
-- Pass/Fail/Vulnerable breakdown with progress bars
+- Security score gauge — **85/100** (up from 62)
+- **Score progression chart** (v1.0 → v1.5 → v2.0)
+- **Review history timeline** with changelogs
+- **FIXED status tracking** — shows what was fixed and when
+- Pass/Fail/Fixed breakdown with progress bars
 - Severity distribution (Critical, High, Medium, Low)
-- Interactive finding cards with expand/collapse
-- Bar & Pie charts for findings analysis
+- **Filter by status** (PASS/FIXED/FAIL) and severity
+- Interactive finding cards with fix descriptions
+
+### 💬 Help Chat Bot
+- Floating chat widget on all authenticated pages
+- Pre-built Q&A templates for common issues
+- Guided answers for login help, leave management, system usage
+- Clear message functionality
 
 ### 🎨 UI/UX
 - Dark / Light theme toggle
@@ -63,6 +109,43 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 - Glassmorphism effects
 - Smooth animations & micro-interactions
 - Fully responsive (mobile, tablet, desktop)
+
+---
+
+## 🔄 Changelog
+
+### v2.0.0 (Latest)
+- ✅ Added **leave types** (Annual, Sick, Personal, Maternity, Paternity)
+- ✅ Added **employee profile page** with leave balance visualization
+- ✅ Added **self-service password change**
+- ✅ Added **bulk approve/reject** with floating action bar
+- ✅ Added **rejection reason modal** — admin must explain rejections
+- ✅ Added **department filter** on leave requests page
+- ✅ Added **team availability view** for admin
+- ✅ Updated code review report with **fix tracking and history**
+- ✅ Removed dead localStorage code
+- 📊 Security score: **78 → 85**
+
+### v1.5.0
+- 🔒 Implemented **SHA-256 password hashing** with salt
+- ⏱️ Added **30-minute session expiry** with inactivity detection
+- 🔔 Added **in-app notification system**
+- 👤 Added **profile avatars** (initials-based)
+- 📊 Added **CSV export** for employees, leaves, and logs
+- 📅 Added **leave calendar** with monthly view
+- 🇮🇩 Added **Indonesia holidays** (34 holidays, 2025-2026)
+- ⚠️ Added **holiday warning** in leave request form
+- 📊 Security score: **62 → 78**
+
+### v1.0.0
+- 🚀 Initial release
+- 🔐 Basic authentication with admin/employee roles
+- 📊 Admin dashboard with charts
+- 👥 Employee CRUD management
+- 📅 Leave request workflow
+- 📈 Activity log monitoring
+- 📋 Code review report page
+- 💬 Help chat bot
 
 ---
 
@@ -98,6 +181,14 @@ A modern, full-stack employee leave management system built with **Next.js 16**,
 | [React Hook Form](https://react-hook-form.com/) | Performant form handling |
 | [Zod](https://zod.dev/) | Schema validation |
 | [@hookform/resolvers](https://github.com/react-hook-form/resolvers) | Zod + RHF integration |
+
+### Security
+| Feature | Implementation |
+|---------|---------------|
+| Password Hashing | SHA-256 with salt via Web Crypto API |
+| Session Management | 30-min timeout with auto-logout |
+| Activity Logging | Full audit trail in Supabase |
+| Input Validation | Zod schemas on all forms |
 
 ---
 
@@ -146,6 +237,7 @@ CREATE TABLE IF NOT EXISTS employees (
   position TEXT NOT NULL DEFAULT '',
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
+  leave_balance INTEGER DEFAULT 12,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -157,6 +249,8 @@ CREATE TABLE IF NOT EXISTS leave_requests (
   end_date TEXT NOT NULL,
   reason TEXT NOT NULL DEFAULT '',
   status TEXT NOT NULL DEFAULT 'PENDING',
+  leave_type TEXT DEFAULT 'ANNUAL',
+  rejection_reason TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -171,10 +265,22 @@ CREATE TABLE IF NOT EXISTS activity_logs (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Notifications table
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  type TEXT DEFAULT 'info',
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Disable RLS for development (enable with proper policies for production)
 ALTER TABLE employees DISABLE ROW LEVEL SECURITY;
 ALTER TABLE leave_requests DISABLE ROW LEVEL SECURITY;
 ALTER TABLE activity_logs DISABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications DISABLE ROW LEVEL SECURITY;
 ```
 
 ### 5. Run the Development Server
@@ -194,14 +300,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 |-------|-------|
 | Username | `admin` |
 | Password | `admin123` |
-| Access | Full dashboard, employee CRUD, leave management, logs |
+| Access | Full dashboard, employee CRUD, leave management, logs, team availability |
 
 ### Employee Account (Demo)
 | Field | Value |
 |-------|-------|
 | Username | `john.doe` |
 | Password | `password123` |
-| Access | View & submit leave requests only |
+| Access | View & submit leave requests, profile, change password, notifications |
 
 > **Tip:** You can also create more employees through the admin dashboard. The default password is `password123` unless you specify a different one.
 
@@ -213,34 +319,57 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 src/
 ├── app/                    # Next.js App Router pages
 │   ├── login/              # Login page with CAPTCHA
-│   ├── dashboard/          # Admin dashboard with charts
+│   ├── dashboard/          # Admin dashboard with charts & holidays
 │   ├── employees/          # Employee CRUD pages
 │   │   ├── new/            # Create employee
 │   │   └── edit/[id]/      # Edit employee
 │   ├── leave/              # Leave request management
 │   │   └── new/            # Submit leave request
 │   ├── logs/               # Activity log monitoring
+│   ├── profile/            # Employee profile & password change
 │   ├── code-review/        # Public code review report
 │   └── api/init-db/        # Database initialization API
 ├── components/
-│   ├── ui/                 # shadcn/ui base components
-│   ├── shared/             # Navbar, ThemeToggle, PageHeader
+│   ├── ui/                 # shadcn/ui base components (button, input, dialog, etc.)
+│   ├── shared/             # Navbar, ThemeToggle, PageHeader, Avatar, NotificationBell
 │   ├── employee/           # Employee form & table
 │   ├── dashboard/          # Stats cards & charts
-│   └── leave/              # Leave form & table
+│   └── leave/              # Leave form, table, calendar
 ├── services/               # Supabase CRUD services
 │   ├── auth-service.ts     # Authentication + activity logging
-│   ├── employee-service.ts # Employee CRUD operations
-│   ├── leave-service.ts    # Leave request operations
-│   └── activity-log-service.ts # Event logging
+│   ├── employee-service.ts # Employee CRUD + leave balance
+│   ├── leave-service.ts    # Leave requests + balance deduction
+│   ├── activity-log-service.ts # Event logging
+│   └── notification-service.ts # In-app notifications
 ├── lib/
 │   └── supabase.ts         # Supabase client initialization
-├── types/                  # TypeScript type definitions
-├── validators/             # Zod validation schemas
+├── types/                  # TypeScript types (Employee, LeaveRequest, LeaveType, etc.)
+├── validators/             # Zod schemas (login, employee, leave with leaveType)
 ├── constants/              # App constants & config
-├── data/                   # Static data (code review findings)
-└── hooks/                  # Custom React hooks
+├── data/                   # Static data (holidays, code review findings)
+│   ├── indonesia-holidays.ts   # 34 holidays (2025-2026)
+│   └── code-review-data.ts     # Review findings with history
+├── hooks/                  # Custom React hooks
+│   └── useSessionExpiry.ts # Auto-logout on inactivity
+└── utils/                  # Utility functions
+    ├── export.ts           # CSV export (Excel-compatible)
+    └── hash.ts             # SHA-256 password hashing
 ```
+
+---
+
+## 🔒 Security Features
+
+| Feature | Status | Details |
+|---------|:------:|---------|
+| Password Hashing | ✅ | SHA-256 + salt via Web Crypto API |
+| Session Expiry | ✅ | 30-min timeout, 2-min warning |
+| Activity Logging | ✅ | Full audit trail (login, CRUD, leave actions) |
+| Input Validation | ✅ | Zod schemas on all forms |
+| Rejection Audit | ✅ | Admin must provide reason for rejections |
+| Password Change | ✅ | Self-service with current password verification |
+| Server-side Auth | ⚠️ | Client-side only (add RLS for production) |
+| Rate Limiting | ⚠️ | Not yet implemented |
 
 ---
 
