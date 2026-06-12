@@ -454,6 +454,8 @@ This project was built through an AI pair programming session with **Antigravity
 | 13 | UI rework + all suggestions | Command palette, skeletons, analytics, overlap detection (v2.1) |
 
 > 📖 **[Read the full chat history →](CHAT_HISTORY.md)**
+>
+> 📋 **[View the implementation plan →](IMPLEMENTATION_PLAN.md)**
 
 ---
 
